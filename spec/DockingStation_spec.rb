@@ -28,25 +28,26 @@ describe DockingStation do
 
     it 'when the bike station is full, should raise an error to say it’s full' do
        station = DockingStation.new
-       DockingStation::DEFAULT_CAPACITY.times { station.dock_bike Bike.new }    # eq to 20.times {subject.dock_bike Bike.new}
-       expect { station.dock_bike(Bike.new) }.to raise_error('docking station full')
+       DockingStation::DEFAULT_CAPACITY.times { station.dock_bike double(:bike) }    # eq to 20.times {subject.dock_bike double(:bike)}
+       expect { station.dock_bike(double(:bike)) }.to raise_error('docking station full')
      end
-
+     
+     let(:bike) { double :bike, report: true } 
      it 'raises an error if user tries to release a broken bike' do
+      allow(bike).to receive(:report).and_return(true)
       station = DockingStation.new
-      bike = Bike.new
       bike.report
       station.dock_bike(bike)
       expect { station.release_bike }.to raise_error "Error: cannot release a broken bike"
      end
 
     # it 'it raises error when docking station is full' do
-    #   bike = Bike.new
+    #   bike = double(:bike)
     #   expect {subject.default_capacity.dock_bike(bike)}.to raise_error 'docking station full'
     # end
 
     it 'releases a bike' do
-      bike = Bike.new
+      bike = double(:bike)
       subject.dock_bike(bike)
       expect(subject.release_bike).to eq bike  # release the bike we docked
     end
@@ -59,7 +60,7 @@ describe DockingStation do
   end
 
   it 'returns a docked bike stored in an array' do
-    bike = Bike.new
+    bike = double(:bike)
     expect(subject.dock_bike(bike)).to eq [bike]
   end
 end
