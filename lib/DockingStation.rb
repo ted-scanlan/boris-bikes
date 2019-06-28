@@ -1,4 +1,5 @@
 require 'pry'
+require_relative 'Bike'
 class DockingStation
   attr_reader :bike
   #eq to...
@@ -15,8 +16,7 @@ class DockingStation
   end
 
   def release_bike
-    raise "no bikes available" if @dock.empty?
-    @dock.pop
+    @dock.empty? ? raise("no bikes available") : check
   end
 
   def dock_bike(bike)
@@ -31,12 +31,13 @@ class DockingStation
   private
 
   def full?
-    if @dock.count >= @capacity
-      return true
-    else
-      return false
-    end
+    @dock.count >= @capacity
   end
+
+  def check
+    @dock[-1].broken ? raise("Error: cannot release a broken bike") : @dock.pop
+  end
+
   #def stored_bike
   #@bike
   #end

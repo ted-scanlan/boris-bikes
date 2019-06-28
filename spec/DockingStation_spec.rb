@@ -26,14 +26,19 @@ describe DockingStation do
       expect {subject.release_bike}.to raise_error 'no bikes available'
     end
 
-
-
     it 'when the bike station is full, should raise an error to say it’s full' do
        station = DockingStation.new
        DockingStation::DEFAULT_CAPACITY.times { station.dock_bike Bike.new }    # eq to 20.times {subject.dock_bike Bike.new}
        expect { station.dock_bike(Bike.new) }.to raise_error('docking station full')
      end
 
+     it 'raises an error if user tries to release a broken bike' do
+      station = DockingStation.new
+      bike = Bike.new
+      bike.report
+      station.dock_bike(bike)
+      expect { station.release_bike }.to raise_error "Error: cannot release a broken bike"
+     end
 
     # it 'it raises error when docking station is full' do
     #   bike = Bike.new
